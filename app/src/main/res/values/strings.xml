@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Choices Canteen</string>
+
+    <string-array name="foodItems">
+        <item>Banku</item>
+        <item>Rice</item>
+        <item>Wakye</item>
+        <item>Fried rice</item>
+    </string-array>
+
+    <string name="spinner_promt">Select Food Item</string>
+</resources>

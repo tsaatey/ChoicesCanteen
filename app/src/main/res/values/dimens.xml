@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="list_item_height">88dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- Text size for login button -->
+    <dimen name="login_button_text_size">20sp</dimen>
+
+    <!--Text size for User login-->
+    <dimen name="user_login_text_size">25sp</dimen>
+
+    <!-- Text size for other components-->
+    <dimen name="other_components">16sp</dimen>
+
+    <!-- Margins for other components -->
+    <dimen name="margin_other">5dp</dimen>
+
+    <!--Height and width of the chart-->
+    <dimen name="cahrt_height">250dp</dimen>
+    <dimen name="chart_width">250dp</dimen>
+</resources>

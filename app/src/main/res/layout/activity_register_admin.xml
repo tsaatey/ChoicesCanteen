@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context="com.artlib.choicescanteen.RegisterAdminActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:title="Create Admin Account" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/admin_layout"
+            android:layout_below="@+id/toolbar2"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="To Use the App, Create an Admin Account"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-condensed"/>
+
+            <EditText
+                android:id="@+id/admin_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:ems="12"
+                android:gravity="center_horizontal"
+                android:hint="Full name...."
+                android:inputType="textPersonName"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"/>
+
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:ems="12"
+                android:gravity="center_horizontal"
+                android:hint="Email..."
+                android:inputType="textEmailAddress"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"/>
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:ems="12"
+                android:gravity="center_horizontal"
+                android:hint="Password...."
+                android:inputType="textPassword"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"/>
+
+            <EditText
+                android:id="@+id/confirm_password_field"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:ems="12"
+                android:gravity="center_horizontal"
+                android:hint="Confirm Password..."
+                android:inputType="textPassword"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"/>
+
+            <Button
+                android:id="@+id/create_account_button"
+                android:layout_width="170dp"
+                android:layout_height="50dp"
+                android:background="@drawable/custom_button"
+                android:text="Create Account"
+                android:textAllCaps="false"
+                android:textColor="#000000"
+                android:textSize="@dimen/login_button_text_size"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</ScrollView>

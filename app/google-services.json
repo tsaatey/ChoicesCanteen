@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "553009579188",
+    "firebase_url": "https://choices-canteen.firebaseio.com",
+    "project_id": "choices-canteen",
+    "storage_bucket": "choices-canteen.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553009579188:android:ee7f0bb4ef2ca6f8",
+        "android_client_info": {
+          "package_name": "com.artlib.choicescanteen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "553009579188-dicidb51gbvim2mc9veden7cdntrkt76.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.artlib.choicescanteen",
+            "certificate_hash": "38efd8dd2cca06e725997f8ab5c81a1f45fde6c9"
+          }
+        },
+        {
+          "client_id": "553009579188-s1c8qqbmgu1toso6mdou85t8adn2bt1s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-ahUtc9HFZ4OOB6U4035JgNeF0SqJxfk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "553009579188-s1c8qqbmgu1toso6mdou85t8adn2bt1s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
