@@ -23,6 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.security.SecureRandom;
 import java.security.SecurityPermission;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SetupActivity extends AppCompatActivity {
 
@@ -147,7 +149,9 @@ public class SetupActivity extends AppCompatActivity {
             String foodId = generateId();
             userLocalDataStore.storeFoodItemId(foodId);
             DatabaseReference storeFood = foodItemDatabaseReference.push();
-            storeFood.child("foodItem").setValue(food);
+            Map<String, String> foodData = new HashMap<>();
+            foodData.put("foodItem", food);
+            storeFood.setValue(foodData);
 
             progressDialog.dismiss();
 
@@ -174,10 +178,13 @@ public class SetupActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-//                            String id = firebaseAuth.getCurrentUser().getUid();
                             DatabaseReference storeUser = addUserDatabaseReference.child(userId);
-                            storeUser.child("name").setValue(name);
+                            Map<String, String> userData = new HashMap<String, String>();
+                            userData.put("name", name);
+                            storeUser.setValue(userData);
+
                             progressDialog.dismiss();
+
                         } else {
                             progressDialog.dismiss();
                             Toast.makeText(SetupActivity.this, "Error in adding user. Try again!", Toast.LENGTH_LONG).show();

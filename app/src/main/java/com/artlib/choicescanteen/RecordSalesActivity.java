@@ -19,7 +19,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class RecordSalesActivity extends AppCompatActivity {
@@ -29,6 +31,7 @@ public class RecordSalesActivity extends AppCompatActivity {
     private Button recordSaleButton;
 
     private ProgressDialog progressDialog;
+    private UserLocalDataStore userLocalDataStore;
 
     private DatabaseReference recordSalesDatabaseReference;
     private DatabaseReference foodDatabaseReference;
@@ -49,6 +52,8 @@ public class RecordSalesActivity extends AppCompatActivity {
 
         foodDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Food_Items");
         foodDatabaseReference.keepSynced(true);
+
+        userLocalDataStore = new UserLocalDataStore(this);
 
         fetchDataForSpinner();
 
@@ -76,12 +81,15 @@ public class RecordSalesActivity extends AppCompatActivity {
         final String food = spinner.getSelectedItem().toString();
         final String amount = foodPrice.getText().toString();
         if (!TextUtils.isEmpty(amount) && !TextUtils.isEmpty(food)) {
+            Map<String, String> saleData = new HashMap<>();
             String dateOfSale = getSalesDate().toString();
+            saleData.put("dateOfSale", dateOfSale);
+            saleData.put("foodItem", food);
+            saleData.put("foodItem_date", dateOfSale.concat(food));
+            saleData.put("price", amount);
+
             DatabaseReference recordSale = recordSalesDatabaseReference.push();
-            recordSale.child("dateOfSale").setValue(dateOfSale);
-            recordSale.child("foodItem").setValue(food);
-            recordSale.child("foodItem_date").setValue(dateOfSale.concat(food));
-            recordSale.child("price").setValue(amount);
+            recordSale.setValue(saleData);
 
             Toast.makeText(RecordSalesActivity.this, "Sale recorded!", Toast.LENGTH_SHORT).show();
 

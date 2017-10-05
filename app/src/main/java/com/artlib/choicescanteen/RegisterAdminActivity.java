@@ -20,6 +20,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RegisterAdminActivity extends AppCompatActivity {
 
     private Button createAccountButton;
@@ -82,7 +85,9 @@ public class RegisterAdminActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             String id = adminAuth.getCurrentUser().getUid();
                             DatabaseReference databaseReference = adminDatabaseReference.child(id);
-                            databaseReference.child("name").setValue(name);
+                            Map<String, String> adminData = new HashMap<String, String>();
+                            adminData.put("name", name);
+                            databaseReference.setValue(adminData);
 
                             progressDialog.dismiss();
 

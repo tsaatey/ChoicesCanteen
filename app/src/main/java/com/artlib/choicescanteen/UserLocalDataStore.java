@@ -42,11 +42,15 @@ public class UserLocalDataStore {
         editor.commit();
     }
 
-    public String getFoodItemId() {
-        String id = userLocalDataStore.getString("foodItemId", "");
-        return id;
+    public void storeBackPressed (boolean back) {
+        SharedPreferences.Editor editor = userLocalDataStore.edit();
+        editor.putBoolean("isBackPressed", back);
+        editor.commit();
     }
 
-
+    public boolean getBackPressed() {
+        boolean back = userLocalDataStore.getBoolean("isBackPressed", false);
+        return back;
+    }
 
 }
