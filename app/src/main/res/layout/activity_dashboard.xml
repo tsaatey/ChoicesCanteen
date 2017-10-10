@@ -20,12 +20,39 @@
             android:theme="?attr/actionBarTheme"
             app:title="Dashboard" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/display_user"
+            android:text="Admin"
+            android:layout_marginTop="20dp"
+            android:layout_toLeftOf="@+id/imageButton"/>
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/today_only_switch"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="16dp"
+            android:background="#00FFFFFF"
+            android:src="@mipmap/ic_more_vert_black_24dp" />
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar2"
+            android:layout_alignParentRight="true"
+            android:text="Today only"
+            android:id="@+id/today_only_switch" />
+
         <LinearLayout
             android:id="@+id/total_sales_area"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_below="@+id/toolbar2"
-            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/today_only_switch"
+            android:gravity="center"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:orientation="vertical">
@@ -50,30 +77,31 @@
                 <TextView
                     android:layout_width="140dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
                     android:paddingLeft="25dp"
                     android:text="Food Item"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="5dp"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="140dp"
                     android:layout_height="wrap_content"
-                    android:text="Amount"
-                    android:textStyle="bold"
+                    android:layout_marginBottom="5dp"
                     android:paddingLeft="45dp"
-                    android:layout_marginBottom="5dp"/>
+                    android:text="Amount"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:fillViewport="true">
 
                 <GridLayout
                     android:id="@+id/dashbaord_sales_grid"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="fill_horizontal"
                     android:background="#00FFFFFF"
                     android:columnCount="2">
@@ -85,13 +113,44 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/menu_area"
+            android:id="@+id/total_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/total_sales_area"
+            android:gravity="center"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:layout_marginTop="30dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/overall_total"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif-monospace"
+                android:text="Overall Total"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/overall_total_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="serif-monospace"
+                android:text="Amount"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/menu_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/total_layout"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="20dp"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -135,16 +194,6 @@
 
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/total_sales_area"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="16dp"
-            android:background="#00FFFFFF"
-            android:src="@mipmap/ic_more_vert_black_24dp" />
 
     </RelativeLayout>
 
