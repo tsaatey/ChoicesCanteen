@@ -92,6 +92,7 @@ public class RegisterAdminActivity extends AppCompatActivity {
                             progressDialog.dismiss();
 
                             userLocalDataStore.isAdminLoggedIn(true);
+                            userLocalDataStore.storeUser("Admin");
                             Intent dashboardIntent = new Intent(RegisterAdminActivity.this, DashboardActivity.class);
                             dashboardIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(dashboardIntent);

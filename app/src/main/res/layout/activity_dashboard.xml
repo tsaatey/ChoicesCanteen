@@ -21,15 +21,29 @@
             app:title="Dashboard" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:id="@+id/display_user"
             android:text="Admin"
             android:layout_marginTop="20dp"
-            android:layout_toLeftOf="@+id/imageButton"/>
+            android:textAlignment="viewEnd"
+            android:gravity="end"
+            android:layout_marginLeft="150dp"/>
 
         <ImageButton
             android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/today_only_switch"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="16dp"
+            android:background="#00FFFFFF"
+            android:src="@mipmap/ic_more_vert_black_24dp"
+            android:visibility="gone"/>
+
+        <ImageButton
+            android:id="@+id/imageButton1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/today_only_switch"
@@ -45,6 +59,7 @@
             android:layout_below="@+id/toolbar2"
             android:layout_alignParentRight="true"
             android:text="Today only"
+            android:textStyle="italic"
             android:id="@+id/today_only_switch" />
 
         <LinearLayout

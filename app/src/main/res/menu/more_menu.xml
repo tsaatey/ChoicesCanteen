@@ -1,9 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <group android:checkableBehavior="single">
-        <item android:id="@+id/logout"
+    <group android:checkableBehavior="none">
+        <item
+            android:title="Food"
+            app:showAsAction="never">
+            <menu>
+                <item
+                    android:id="@+id/add_food"
+                    android:title="Add Food Type"
+                    app:showAsAction="never" />
+
+                <item
+                    android:id="@+id/delete_food"
+                    android:title="Delete Food Type"
+                    app:showAsAction="never" />
+            </menu>
+        </item>
+    </group>
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/record_sale"
+            android:title="Record Sale"
+            app:showAsAction="never" />
+    </group>
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/logout"
             android:title="Logout"
-            app:showAsAction="never"/>
+            app:showAsAction="never" />
     </group>
 </menu>

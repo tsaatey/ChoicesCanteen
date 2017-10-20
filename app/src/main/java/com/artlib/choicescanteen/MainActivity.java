@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,7 +51,10 @@ public class MainActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
 
         adminDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Admin");
+        adminDatabaseReference.keepSynced(true);
+
         userDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+        userDatabaseReference.keepSynced(true);
 
         loginAuth = FirebaseAuth.getInstance();
 
@@ -103,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void login() {
-        String usernameText = username.getText().toString();
+        final String usernameText = username.getText().toString();
         String passwordText = password.getText().toString();
         if (!TextUtils.isEmpty(usernameText) && !TextUtils.isEmpty(passwordText)) {
             progressDialog.setMessage("You are being logged in, please wait...");
@@ -121,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.hasChild(id)){
                                     userLocalDataStore.isAdminLoggedIn(true);
+                                    userLocalDataStore.storeUser("Admin");
                                     progressDialog.dismiss();
                                     Intent dashboardIntent = new Intent(MainActivity.this, DashboardActivity.class);
                                     dashboardIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

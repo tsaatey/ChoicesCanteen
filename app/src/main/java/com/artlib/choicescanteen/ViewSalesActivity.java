@@ -41,7 +41,6 @@ public class ViewSalesActivity extends AppCompatActivity {
 
     private DatabaseReference salesDatabaseReference;
 
-    private double totalSaleForSingleFoodItem;
     private double totalSalesForAllFoodItems;
     private int counter = 0;
 
@@ -59,7 +58,8 @@ public class ViewSalesActivity extends AppCompatActivity {
         endDateEditText = (EditText) findViewById(R.id.secondDatePicker);
         periodic_sales_text_view = (TextView) findViewById(R.id.periodic_sales_amount);
         viewDataButton = (Button) findViewById(R.id.continue_to_view_records);
-        linearLayout = (LinearLayout)findViewById(R.id.display_sales_linear_layout);
+        linearLayout = (LinearLayout) findViewById(R.id.display_sales_linear_layout);
+        linearLayout.setVisibility(View.GONE);
 
         startDateEditText.setFocusable(false);
         startDateEditText.setClickable(true);
@@ -83,7 +83,7 @@ public class ViewSalesActivity extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         startDateEditText.setText(dayOfMonth + "-" + (month + 1) + "-" + year);
                     }
-                },mYear, mMonth, mDay);
+                }, mYear, mMonth, mDay);
 
                 datePickerDialog.show();
             }
@@ -102,7 +102,7 @@ public class ViewSalesActivity extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         endDateEditText.setText(dayOfMonth + "-" + (month + 1) + "-" + year);
                     }
-                },mYear, mMonth, mDay);
+                }, mYear, mMonth, mDay);
 
                 datePickerDialog.show();
             }
@@ -114,6 +114,7 @@ public class ViewSalesActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(startDateEditText.getText().toString())) {
                     if (!TextUtils.isEmpty(startDateEditText.getText().toString())) {
+                        linearLayout.setVisibility(View.VISIBLE);
                         gridLayout.removeAllViews();
                         displaySalesInGridLayout();
 
@@ -156,11 +157,15 @@ public class ViewSalesActivity extends AppCompatActivity {
                         prices.add(PricesIterator.next().child("price").getValue(String.class));
                     }
 
+                    Iterator<DataSnapshot> totalSalesIterator = dataSnapshot.getChildren().iterator();
+                    while (totalSalesIterator.hasNext()) {
+                        totalSalesForAllFoodItems += Double.parseDouble(totalSalesIterator.next().child("price").getValue(String.class));
+                    }
+
                     int count = 0;
+                    for (String food : foodStuffs) {
 
-                    for (String food: foodStuffs) {
-
-                        for (int i = 1; i <= 3; i++){
+                        for (int i = 1; i <= 3; i++) {
 
                             if (i == 1) {
                                 TextView sold_food_text_view = new TextView(ViewSalesActivity.this);
@@ -191,7 +196,7 @@ public class ViewSalesActivity extends AppCompatActivity {
                             } else if (i == 3) {
                                 TextView sold_food_text_view = new TextView(ViewSalesActivity.this);
                                 sold_food_text_view.setId(counter);
-                                sold_food_text_view.setText("GHS "+ Double.parseDouble(prices.get(count)) + "0");
+                                sold_food_text_view.setText("GHS " + Double.parseDouble(prices.get(count)) + "0");
                                 gridLayout.addView(sold_food_text_view);
 
                                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
@@ -203,6 +208,9 @@ public class ViewSalesActivity extends AppCompatActivity {
                         count++;
                         counter++;
                     }
+
+                    periodic_sales_text_view.setText("GHS " + totalSalesForAllFoodItems + "0");
+                    totalSalesForAllFoodItems = 0;
                 }
 
             }

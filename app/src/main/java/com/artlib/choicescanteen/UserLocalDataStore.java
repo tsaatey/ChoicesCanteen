@@ -42,15 +42,15 @@ public class UserLocalDataStore {
         editor.commit();
     }
 
-    public void storeBackPressed (boolean back) {
+    public void storeUser(String username) {
         SharedPreferences.Editor editor = userLocalDataStore.edit();
-        editor.putBoolean("isBackPressed", back);
+        editor.putString("username", username);
         editor.commit();
     }
 
-    public boolean getBackPressed() {
-        boolean back = userLocalDataStore.getBoolean("isBackPressed", false);
-        return back;
+    public String getUser() {
+        String user = userLocalDataStore.getString("username", "");
+        return user;
     }
 
 }

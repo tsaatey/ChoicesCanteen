@@ -33,9 +33,11 @@ public class DashboardActivity extends AppCompatActivity {
     private TextView setupView;
     private TextView totalSalesDisplay;
     private ImageButton imageButton;
+    private ImageButton adminMenu;
     private GridLayout gridLayout;
     private TextView totalAmountTextView;
     private Switch aSwitch;
+    private TextView username_display;
 
     private UserLocalDataStore userLocalDataStore;
     private DatabaseReference salesDatabaseReference;
@@ -53,14 +55,16 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        recordSalesView = (TextView)findViewById(R.id.record_sales_view);
-        viewSalesView = (TextView)findViewById(R.id.view_sales_view);
-        setupView = (TextView)findViewById(R.id.setup_view);
-        imageButton = (ImageButton)findViewById(R.id.imageButton);
+        recordSalesView = (TextView) findViewById(R.id.record_sales_view);
+        viewSalesView = (TextView) findViewById(R.id.view_sales_view);
+        setupView = (TextView) findViewById(R.id.setup_view);
+        imageButton = (ImageButton) findViewById(R.id.imageButton);
         totalSalesDisplay = (TextView) findViewById(R.id.total_sales_display);
         gridLayout = (GridLayout) findViewById(R.id.dashbaord_sales_grid);
         totalAmountTextView = (TextView) findViewById(R.id.overall_total_amount);
         aSwitch = (Switch) findViewById(R.id.today_only_switch);
+        username_display = (TextView) findViewById(R.id.display_user);
+        adminMenu = (ImageButton) findViewById(R.id.imageButton1);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -73,11 +77,18 @@ public class DashboardActivity extends AppCompatActivity {
 
         controlDashboard();
 
-
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openPopUpMenu(v);
+                openUserPopUpMenu(v);
+            }
+        });
+
+        adminMenu.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                openAdminPopUpMenu(v);
             }
         });
 
@@ -148,17 +159,24 @@ public class DashboardActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         // do nothing
     }
 
-    private void controlDashboard(){
+    private void controlDashboard() {
         if (!userLocalDataStore.getIsAdminLoggedIn()) {
             setupView.setVisibility(View.INVISIBLE);
+            username_display.setText(firebaseAuth.getCurrentUser().getEmail().toString());
+            imageButton.setVisibility(View.VISIBLE);
+            adminMenu.setVisibility(View.GONE);
+
+        } else {
+            username_display.setText(userLocalDataStore.getUser());
+            imageButton.setVisibility(View.VISIBLE);
         }
+
     }
 
-    private void openPopUpMenu(View view) {
+    private void openUserPopUpMenu(View view) {
         PopupMenu popupMenu = new PopupMenu(view.getContext(), imageButton);
         popupMenu.inflate(R.menu.more_menu);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -168,9 +186,61 @@ public class DashboardActivity extends AppCompatActivity {
                     case R.id.logout:
                         logout();
                         break;
+
+                    case R.id.add_food:
+                        // // TODO: 18/10/2017
+                        break;
+
+                    case R.id.delete_food:
+                        //// TODO: 18/10/2017
+                        break;
+
+                    case R.id.record_sale:
+                        startActivity(new Intent(DashboardActivity.this, RecordSalesActivity.class));
+                        break;
                 }
                 return false;
+            }
+        });
+        popupMenu.show();
+    }
 
+    private void openAdminPopUpMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(view.getContext(), adminMenu);
+        popupMenu.inflate(R.menu.admin_menu);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.logout:
+                        logout();
+                        break;
+
+                    case R.id.delete_user:
+                        // // TODO: 18/10/2017  
+                        break;
+
+                    case R.id.add_food:
+                        startActivity(new Intent(DashboardActivity.this, AddUserActivity.class));
+                        break;
+
+                    case R.id.delete_food:
+                        // // TODO: 18/10/2017  
+                        break;
+
+                    case R.id.add_user:
+                        // TODO: 18/10/2017
+                        break;
+
+                    case R.id.add_sale:
+                        startActivity(new Intent(DashboardActivity.this, RecordSalesActivity.class));
+                        break;
+
+                    case R.id.delete_sale:
+                        // // TODO: 20/10/2017
+                        break;
+                }
+                return false;
             }
         });
         popupMenu.show();
@@ -187,14 +257,14 @@ public class DashboardActivity extends AppCompatActivity {
     private void getFoodPricesForToday(final ArrayList<String> soldFoodItems) {
         totalSalesDisplay.setText("Today's Sales");
 
-        for (final String food: soldFoodItems) {
-            salesDatabaseReference.orderByChild("foodItem_date").equalTo(getSalesDate()+""+ food).addValueEventListener(new ValueEventListener() {
+        for (final String food : soldFoodItems) {
+            salesDatabaseReference.orderByChild("foodItem_date").equalTo(getSalesDate() + "" + food).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                     if (dataSnapshot.exists()) {
                         Iterator<DataSnapshot> data = dataSnapshot.getChildren().iterator();
-                        if (!data.equals(null)){
+                        if (!data.equals(null)) {
                             while (data.hasNext()) {
                                 total += Double.parseDouble((String) data.next().child("price").getValue());
                             }
@@ -219,7 +289,7 @@ public class DashboardActivity extends AppCompatActivity {
                             } else if (i % 2 == 0) {
                                 TextView sold_food_text_view = new TextView(DashboardActivity.this);
                                 sold_food_text_view.setId(counter);
-                                sold_food_text_view.setText("GHS "+total + "0");
+                                sold_food_text_view.setText("GHS " + total + "0");
                                 gridLayout.addView(sold_food_text_view);
 
                                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
@@ -229,7 +299,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                             }
                         }
-                        totalAmountTextView.setText("GHS "+ overallTotal + "0");
+                        totalAmountTextView.setText("GHS " + overallTotal + "0");
                         total = 0;
                         counter++;
                     }
@@ -251,7 +321,7 @@ public class DashboardActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     Iterator<DataSnapshot> dataSnapshotIterator = dataSnapshot.getChildren().iterator();
-                    while(dataSnapshotIterator.hasNext()) {
+                    while (dataSnapshotIterator.hasNext()) {
                         foodItems.add(dataSnapshotIterator.next().child("foodItem").getValue(String.class));
                     }
                 }
@@ -262,6 +332,9 @@ public class DashboardActivity extends AppCompatActivity {
 
                 if (foodItems.size() > 0) {
                     getFoodPricesForToday(foodItems);
+                } else {
+                    totalSalesDisplay.setText("Today's Sales");
+                    totalAmountTextView.setText("GHS 00.00");
                 }
             }
 
@@ -279,7 +352,7 @@ public class DashboardActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     Iterator<DataSnapshot> dataSnapshotIterator = dataSnapshot.getChildren().iterator();
-                    while(dataSnapshotIterator.hasNext()) {
+                    while (dataSnapshotIterator.hasNext()) {
                         foodItems.add(dataSnapshotIterator.next().child("foodItem").getValue(String.class));
                     }
                 }
@@ -302,14 +375,14 @@ public class DashboardActivity extends AppCompatActivity {
     private void getFoodPricesFromStartToFinish(ArrayList<String> foodStuffs) {
         totalSalesDisplay.setText("Total Sales For Entire Period");
 
-        for (final String food: foodStuffs) {
+        for (final String food : foodStuffs) {
             salesDatabaseReference.orderByChild("foodItem").equalTo(food).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                     if (dataSnapshot.exists()) {
                         Iterator<DataSnapshot> data = dataSnapshot.getChildren().iterator();
-                        if (!data.equals(null)){
+                        if (!data.equals(null)) {
                             while (data.hasNext()) {
                                 total += Double.parseDouble((String) data.next().child("price").getValue());
                             }
@@ -334,7 +407,7 @@ public class DashboardActivity extends AppCompatActivity {
                             } else if (i % 2 == 0) {
                                 TextView sold_food_text_view = new TextView(DashboardActivity.this);
                                 sold_food_text_view.setId(counter);
-                                sold_food_text_view.setText("GHS "+total + "0");
+                                sold_food_text_view.setText("GHS " + total + "0");
                                 gridLayout.addView(sold_food_text_view);
 
                                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
@@ -344,7 +417,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                             }
                         }
-                        totalAmountTextView.setText("GHS "+ overallTotal + "0");
+                        totalAmountTextView.setText("GHS " + overallTotal + "0");
                         total = 0;
                         counter++;
                     }

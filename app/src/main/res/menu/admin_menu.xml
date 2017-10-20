@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/sales"
+            android:title="Sales"
+            app:showAsAction="never">
+            <menu>
+                <item
+                    android:id="@+id/add_sale"
+                    android:title="Record Sales"
+                    app:showAsAction="never" />
+
+                <item
+                    android:id="@+id/delete_sale"
+                    android:title="Delete Sales"
+                    app:showAsAction="never" />
+            </menu>
+        </item>
+    </group>
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/manage_users"
+            android:title="Users"
+            app:showAsAction="never">
+            <menu>
+                <item
+                    android:id="@+id/add_user"
+                    android:title="Add User"
+                    app:showAsAction="never" />
+
+                <item
+                    android:id="@+id/delete_user"
+                    android:title="Delete User"
+                    app:showAsAction="never" />
+            </menu>
+        </item>
+    </group>
+    <group android:checkableBehavior="none">
+        <item
+            android:title="Food"
+            app:showAsAction="never">
+
+            <menu>
+                <item
+                    android:id="@+id/add_food"
+                    android:title="Add Food Type"
+                    app:showAsAction="never" />
+
+                <item
+                    android:id="@+id/delete_food"
+                    android:title="Delete Food Type"
+                    app:showAsAction="never" />
+            </menu>
+        </item>
+    </group>
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/logout"
+            android:title="Logout"
+            app:showAsAction="never" />
+    </group>
+</menu>

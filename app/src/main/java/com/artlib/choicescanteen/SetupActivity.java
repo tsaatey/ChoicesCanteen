@@ -92,14 +92,20 @@ public class SetupActivity extends AppCompatActivity {
         addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addUserToDatabase();
+                String full_name = fullName.getText().toString();
+                String mail = email.getText().toString();
+                String pass1 = password.getText().toString();
+                String pass2 = confirmPassword.getText().toString();
+
+                addUserToDatabase(full_name, mail, pass1, pass2);
             }
         });
 
         addFoodItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addFoodToDatabase();
+                String food = foodItem.getText().toString();
+                addFoodToDatabase(food);
             }
         });
 
@@ -139,8 +145,7 @@ public class SetupActivity extends AppCompatActivity {
         });
     }
 
-    private void addFoodToDatabase() {
-        String food = foodItem.getText().toString();
+    private void addFoodToDatabase(String food) {
         if (!TextUtils.isEmpty(food)){
             progressDialog.setMessage("Adding food, please wait...");
             progressDialog.setCancelable(false);
@@ -161,11 +166,8 @@ public class SetupActivity extends AppCompatActivity {
 
     }
 
-    private void addUserToDatabase() {
-        final String name = fullName.getText().toString();
-        String user_mail = email.getText().toString();
-        String password1 = password.getText().toString();
-        String password2 = confirmPassword.getText().toString();
+    public void addUserToDatabase(final String name, String user_mail, String password1, String password2) {
+
         if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(user_mail) && !TextUtils.isEmpty(password1) && !TextUtils.isEmpty(password2)) {
             progressDialog.setMessage("Adding user, please wait...");
             progressDialog.setCancelable(false);
@@ -182,7 +184,6 @@ public class SetupActivity extends AppCompatActivity {
                             Map<String, String> userData = new HashMap<String, String>();
                             userData.put("name", name);
                             storeUser.setValue(userData);
-
                             progressDialog.dismiss();
 
                         } else {
