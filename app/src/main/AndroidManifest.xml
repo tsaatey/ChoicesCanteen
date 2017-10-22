@@ -29,7 +29,10 @@
         <activity android:name=".ViewSalesActivity" />
         <activity android:name=".SetupActivity" />
         <activity android:name=".RegisterAdminActivity" />
-        <activity android:name=".AddUserActivity"></activity>
+        <activity android:name=".AddUserActivity" />
+        <activity android:name=".AddFoodActivity" />
+        <activity android:name=".DisplayFoodItemsActivity" />
+        <activity android:name=".DeleteSalesActivity"></activity>
     </application>
 
 </manifest>

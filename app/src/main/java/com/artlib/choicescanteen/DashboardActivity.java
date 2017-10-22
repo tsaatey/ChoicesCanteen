@@ -188,11 +188,11 @@ public class DashboardActivity extends AppCompatActivity {
                         break;
 
                     case R.id.add_food:
-                        // // TODO: 18/10/2017
+                        startActivity(new Intent(DashboardActivity.this, AddFoodActivity.class));
                         break;
 
                     case R.id.delete_food:
-                        //// TODO: 18/10/2017
+                        startActivity(new Intent(DashboardActivity.this, DisplayFoodItemsActivity.class));
                         break;
 
                     case R.id.record_sale:
@@ -221,15 +221,15 @@ public class DashboardActivity extends AppCompatActivity {
                         break;
 
                     case R.id.add_food:
-                        startActivity(new Intent(DashboardActivity.this, AddUserActivity.class));
+                        startActivity(new Intent(DashboardActivity.this, AddFoodActivity.class));
                         break;
 
                     case R.id.delete_food:
-                        // // TODO: 18/10/2017  
+                        startActivity(new Intent(DashboardActivity.this, DisplayFoodItemsActivity.class));
                         break;
 
                     case R.id.add_user:
-                        // TODO: 18/10/2017
+                        startActivity(new Intent(DashboardActivity.this, AddUserActivity.class));
                         break;
 
                     case R.id.add_sale:
@@ -255,7 +255,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void getFoodPricesForToday(final ArrayList<String> soldFoodItems) {
-        totalSalesDisplay.setText("Today's Sales");
+        totalSalesDisplay.setText("Today's Food");
 
         for (final String food : soldFoodItems) {
             salesDatabaseReference.orderByChild("foodItem_date").equalTo(getSalesDate() + "" + food).addValueEventListener(new ValueEventListener() {
@@ -333,7 +333,7 @@ public class DashboardActivity extends AppCompatActivity {
                 if (foodItems.size() > 0) {
                     getFoodPricesForToday(foodItems);
                 } else {
-                    totalSalesDisplay.setText("Today's Sales");
+                    totalSalesDisplay.setText("Today's Food");
                     totalAmountTextView.setText("GHS 00.00");
                 }
             }
@@ -361,7 +361,14 @@ public class DashboardActivity extends AppCompatActivity {
                 foodItems.clear();
                 foodItems.addAll(noDuplicates);
 
-                getFoodPricesFromStartToFinish(foodItems);
+                if (foodItems.size() > 0) {
+                    getFoodPricesFromStartToFinish(foodItems);
+                } else {
+                    totalSalesDisplay.setText("Today's Food");
+                    totalAmountTextView.setText("GHS 00.00");
+                }
+
+
 
             }
 
@@ -373,7 +380,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void getFoodPricesFromStartToFinish(ArrayList<String> foodStuffs) {
-        totalSalesDisplay.setText("Total Sales For Entire Period");
+        totalSalesDisplay.setText("Total Food For Entire Period");
 
         for (final String food : foodStuffs) {
             salesDatabaseReference.orderByChild("foodItem").equalTo(food).addValueEventListener(new ValueEventListener() {

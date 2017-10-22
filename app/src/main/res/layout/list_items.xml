@@ -7,10 +7,18 @@
     android:padding="16dp">
 
     <TextView
+        android:id="@+id/date_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="6"
+        android:paddingLeft="25dp"
+        tools:text="Date" />
+
+    <TextView
         android:id="@+id/food_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="11"
+        android:ems="8"
         android:paddingLeft="25dp"
         tools:text="Food ITem" />
 
@@ -18,8 +26,14 @@
         android:id="@+id/amount_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="11"
+        android:ems="5"
         android:textAlignment="center"
         tools:text="Amount" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkbox"/>
+
 
 </LinearLayout>

@@ -8,12 +8,12 @@
             <menu>
                 <item
                     android:id="@+id/add_food"
-                    android:title="Add Food Type"
+                    android:title="Add Food"
                     app:showAsAction="never" />
 
                 <item
                     android:id="@+id/delete_food"
-                    android:title="Delete Food Type"
+                    android:title="Delete Food"
                     app:showAsAction="never" />
             </menu>
         </item>

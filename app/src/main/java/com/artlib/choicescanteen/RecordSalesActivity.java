@@ -73,17 +73,17 @@ public class RecordSalesActivity extends AppCompatActivity {
     private void loadDataIntoSpinner(ArrayList<String> foodItems) {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, foodItems);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setPrompt("Select Food Item");
         spinner.setAdapter(adapter);
     }
 
     private void recordSales() {
         final String food = spinner.getSelectedItem().toString();
         final String amount = foodPrice.getText().toString();
-        if (!TextUtils.isEmpty(amount) && !TextUtils.isEmpty(food)) {
+        if (!TextUtils.isEmpty(amount) && !TextUtils.isEmpty(food) && !food.equals("Select food item")) {
             Map<String, String> saleData = new HashMap<>();
-            String dateOfSale = getSalesDate().toString();
+            String dateOfSale = getSalesDate();
             saleData.put("dateOfSale", dateOfSale);
+            saleData.put("saleDateAndTime", getSalesDateAndTime());
             saleData.put("foodItem", food);
             saleData.put("foodItem_date", dateOfSale.concat(food));
             saleData.put("price", amount);
@@ -107,6 +107,7 @@ public class RecordSalesActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     ArrayList<String> foods = new ArrayList<String>();
+                    foods.add("Select food item");
                     Iterator<DataSnapshot> foodItems = dataSnapshot.getChildren().iterator();
 
                     while (foodItems.hasNext()) {
@@ -125,6 +126,13 @@ public class RecordSalesActivity extends AppCompatActivity {
 
     private String getSalesDate() {
         final java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("dd-MM-yyy");
+        simpleDateFormat.setTimeZone(TimeZone.getDefault());
+        final String date = simpleDateFormat.format(new Date()).toString();
+        return date;
+    }
+
+    private String getSalesDateAndTime() {
+        final java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("dd-MM-yyy HH:mm:ss");
         simpleDateFormat.setTimeZone(TimeZone.getDefault());
         final String date = simpleDateFormat.format(new Date()).toString();
         return date;

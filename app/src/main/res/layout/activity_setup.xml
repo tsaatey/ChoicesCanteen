@@ -29,7 +29,7 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/setup_background"
             android:padding="16dp"
-            android:text="Add Food Type"
+            android:text="Add Food"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textStyle="bold" />
@@ -155,7 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="16dp"
-                android:text="Add Food Type"
+                android:text="Add Food"
                 android:textAlignment="center"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -165,7 +165,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="16dp"
-                android:hint="Food type"
+                android:hint="Food name"
                 android:inputType="textPersonName"
                 android:textAlignment="center" />
 

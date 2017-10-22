@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context="com.artlib.choicescanteen.AddUserActivity">
+    tools:context="com.artlib.choicescanteen.AddFoodActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,49 +19,22 @@
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
-            app:title="Add User" />
+            app:title="Add Food" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="25dp"
-            android:gravity="center">
+            android:gravity="center"
+            android:padding="25dp">
 
             <EditText
-                android:id="@+id/name_field"
+                android:id="@+id/food_type_field"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="16dp"
-                android:hint="Enter full name..."
+                android:hint="Food name"
                 android:inputType="textPersonName"
-                android:textAlignment="center" />
-
-            <EditText
-                android:id="@+id/email_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:hint="Enter email..."
-                android:inputType="textEmailAddress"
-                android:textAlignment="center" />
-
-            <EditText
-                android:id="@+id/password_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:hint="Enter password..."
-                android:inputType="textPassword"
-                android:textAlignment="center" />
-
-            <EditText
-                android:id="@+id/confirm_password_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:hint="Confirm password..."
-                android:inputType="textPassword"
                 android:textAlignment="center" />
 
             <LinearLayout
@@ -70,7 +44,7 @@
                 android:gravity="center">
 
                 <Button
-                    android:id="@+id/cancel_action_button"
+                    android:id="@+id/cancel_button"
                     android:layout_width="140dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
@@ -81,14 +55,14 @@
                     android:textStyle="bold" />
 
                 <Button
-                    android:id="@+id/add_user_button"
+                    android:id="@+id/food_type_button"
                     android:layout_width="140dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="10dp"
                     android:background="@drawable/custom_button"
                     android:text="Add"
                     android:textAllCaps="false"
+                    android:layout_marginLeft="10dp"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>

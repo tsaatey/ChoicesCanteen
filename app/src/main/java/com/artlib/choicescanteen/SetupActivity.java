@@ -147,9 +147,6 @@ public class SetupActivity extends AppCompatActivity {
 
     private void addFoodToDatabase(String food) {
         if (!TextUtils.isEmpty(food)){
-            progressDialog.setMessage("Adding food, please wait...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
 
             String foodId = generateId();
             userLocalDataStore.storeFoodItemId(foodId);
@@ -158,20 +155,15 @@ public class SetupActivity extends AppCompatActivity {
             foodData.put("foodItem", food);
             storeFood.setValue(foodData);
 
-            progressDialog.dismiss();
-
-            Toast.makeText(SetupActivity.this, "Food type saved!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SetupActivity.this, "Food item saved!", Toast.LENGTH_SHORT).show();
             foodItem.setText("");
         }
 
     }
 
-    public void addUserToDatabase(final String name, String user_mail, String password1, String password2) {
+    private void addUserToDatabase(final String name, String user_mail, String password1, String password2) {
 
         if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(user_mail) && !TextUtils.isEmpty(password1) && !TextUtils.isEmpty(password2)) {
-            progressDialog.setMessage("Adding user, please wait...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
 
             if (password1.equals(password2)) {
                 final String userId = generateId();
@@ -184,7 +176,6 @@ public class SetupActivity extends AppCompatActivity {
                             Map<String, String> userData = new HashMap<String, String>();
                             userData.put("name", name);
                             storeUser.setValue(userData);
-                            progressDialog.dismiss();
 
                         } else {
                             progressDialog.dismiss();

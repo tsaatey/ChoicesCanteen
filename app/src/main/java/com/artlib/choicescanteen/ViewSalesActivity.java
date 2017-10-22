@@ -144,7 +144,7 @@ public class ViewSalesActivity extends AppCompatActivity {
                     Iterator<DataSnapshot> dataSnapshotIterator = dataSnapshot.getChildren().iterator();
                     while (dataSnapshotIterator.hasNext()) {
 
-                        dateOfSale.add(dataSnapshotIterator.next().child("dateOfSale").getValue(String.class));
+                        dateOfSale.add(dataSnapshotIterator.next().child("saleDateAndTime").getValue(String.class));
                     }
 
                     Iterator<DataSnapshot> foodStuffsIterator = dataSnapshot.getChildren().iterator();
