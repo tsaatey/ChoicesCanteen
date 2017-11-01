@@ -32,7 +32,9 @@
         <activity android:name=".AddUserActivity" />
         <activity android:name=".AddFoodActivity" />
         <activity android:name=".DisplayFoodItemsActivity" />
-        <activity android:name=".DeleteSalesActivity"></activity>
+        <activity android:name=".DeleteSalesActivity" />
+        <activity android:name=".TestMultichoiceListViewActivity" />
+        <activity android:name=".DeleteFoodItemActivity"></activity>
     </application>
 
 </manifest>

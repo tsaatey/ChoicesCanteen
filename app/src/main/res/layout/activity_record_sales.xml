@@ -32,8 +32,7 @@
             <Spinner
                 android:id="@+id/food_list"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:entries="@array/foodItems" />
+                android:layout_height="40dp" />
 
             <EditText
                 android:layout_width="match_parent"

@@ -1,16 +1,23 @@
 package com.artlib.choicescanteen;
 
+import android.content.DialogInterface;
 import android.content.Intent;;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -237,7 +244,7 @@ public class DashboardActivity extends AppCompatActivity {
                         break;
 
                     case R.id.delete_sale:
-                        // // TODO: 20/10/2017
+                        startActivity(new Intent(DashboardActivity.this, DeleteSalesActivity.class));
                         break;
                 }
                 return false;
@@ -255,7 +262,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void getFoodPricesForToday(final ArrayList<String> soldFoodItems) {
-        totalSalesDisplay.setText("Today's Food");
+        totalSalesDisplay.setText("Today's Sales");
 
         for (final String food : soldFoodItems) {
             salesDatabaseReference.orderByChild("foodItem_date").equalTo(getSalesDate() + "" + food).addValueEventListener(new ValueEventListener() {
@@ -333,7 +340,7 @@ public class DashboardActivity extends AppCompatActivity {
                 if (foodItems.size() > 0) {
                     getFoodPricesForToday(foodItems);
                 } else {
-                    totalSalesDisplay.setText("Today's Food");
+                    totalSalesDisplay.setText("Today's Sales");
                     totalAmountTextView.setText("GHS 00.00");
                 }
             }
@@ -364,7 +371,7 @@ public class DashboardActivity extends AppCompatActivity {
                 if (foodItems.size() > 0) {
                     getFoodPricesFromStartToFinish(foodItems);
                 } else {
-                    totalSalesDisplay.setText("Today's Food");
+                    totalSalesDisplay.setText("Today's Sales");
                     totalAmountTextView.setText("GHS 00.00");
                 }
 
@@ -380,7 +387,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void getFoodPricesFromStartToFinish(ArrayList<String> foodStuffs) {
-        totalSalesDisplay.setText("Total Food For Entire Period");
+        totalSalesDisplay.setText("Total Sales For Entire Period");
 
         for (final String food : foodStuffs) {
             salesDatabaseReference.orderByChild("foodItem").equalTo(food).addValueEventListener(new ValueEventListener() {
@@ -444,6 +451,111 @@ public class DashboardActivity extends AppCompatActivity {
         simpleDateFormat.setTimeZone(TimeZone.getDefault());
         final String date = simpleDateFormat.format(new Date()).toString();
         return date;
+    }
+
+    private void createDeleteDialog(final String[] foodItems) {
+        final boolean[] checkedItems = new boolean[foodItems.length];
+        final ArrayList<Integer> selectedItems = new ArrayList<>();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
+        builder.setTitle("Available food items");
+        builder.setMultiChoiceItems(foodItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                int mCounter = 0;
+                if (isChecked) {
+                    if (!selectedItems.contains(which)) {
+                        selectedItems.add(which);
+                        mCounter++;
+
+                    }
+                } else if(selectedItems.contains(mCounter)) {
+                    selectedItems.remove(mCounter);
+
+                }
+            }
+        });
+        builder.setCancelable(false);
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // delete items here
+                for (Integer i: selectedItems) {
+                    foodDatabaseReference.orderByChild("foodItem").equalTo(foodItems[i]).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                String key = "";
+                                Iterator<DataSnapshot> dataSnapshotIterator = dataSnapshot.getChildren().iterator();
+
+                                if (dataSnapshotIterator.hasNext()) {
+                                    key = dataSnapshotIterator.next().getKey();
+                                }
+
+                                if (!TextUtils.isEmpty(key))
+                                    foodDatabaseReference.child(key).removeValue();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+        });
+
+        builder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for (int i = 0; i < checkedItems.length; i++) {
+                    checkedItems[i] = false;
+                    selectedItems.clear();
+                }
+            }
+        });
+
+        builder.create();
+        builder.show();
+
+    }
+
+    private void launchDeleteDialog() {
+
+        foodDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String[] foodItems = new String[(int)dataSnapshot.getChildrenCount()];
+                    Iterator<DataSnapshot> dataSnapshotIterator = dataSnapshot.getChildren().iterator();
+                    int count = 0;
+                    while (count < ((int)dataSnapshot.getChildrenCount())) {
+                        foodItems[count] = (dataSnapshotIterator.next().child("foodItem").getValue(String.class));
+                        count++;
+                    }
+
+                    if (foodItems.length > 0) {
+                        createDeleteDialog(foodItems);
+
+                    } else {
+                        Toast.makeText(DashboardActivity.this, "No food item to display", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

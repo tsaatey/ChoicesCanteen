@@ -211,6 +211,9 @@ public class ViewSalesActivity extends AppCompatActivity {
 
                     periodic_sales_text_view.setText("GHS " + totalSalesForAllFoodItems + "0");
                     totalSalesForAllFoodItems = 0;
+
+                } else {
+                    Toast.makeText(ViewSalesActivity.this, "No sales data to display", Toast.LENGTH_SHORT).show();
                 }
 
             }

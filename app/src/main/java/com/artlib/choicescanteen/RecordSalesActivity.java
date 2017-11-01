@@ -86,6 +86,7 @@ public class RecordSalesActivity extends AppCompatActivity {
             saleData.put("saleDateAndTime", getSalesDateAndTime());
             saleData.put("foodItem", food);
             saleData.put("foodItem_date", dateOfSale.concat(food));
+            saleData.put("foodItem_date_time", getSalesDateAndTime().concat(food));
             saleData.put("price", amount);
 
             DatabaseReference recordSale = recordSalesDatabaseReference.push();
@@ -113,7 +114,14 @@ public class RecordSalesActivity extends AppCompatActivity {
                     while (foodItems.hasNext()) {
                         foods.add(foodItems.next().child("foodItem").getValue().toString());
                     }
-                    loadDataIntoSpinner(foods);
+
+                    if (foods.size() > 0) {
+                        loadDataIntoSpinner(foods);
+                    } else {
+                        foods.add("No food item available");
+                        loadDataIntoSpinner(foods);
+                    }
+
                 }
             }
 
