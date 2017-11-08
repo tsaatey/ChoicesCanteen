@@ -1,17 +1,23 @@
 package com.artlib.choicescanteen;
 
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.GridLayout;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,12 +34,26 @@ import java.util.Iterator;
 public class DeleteSalesActivity extends AppCompatActivity {
 
     private Button viewDataButton;
-    private TextView periodic_sales_text_view;
     private EditText startDateEditText;
     private EditText endDateEditText;
     private DatePickerDialog datePickerDialog;
+    private ListView listView;
+    private ImageButton imageButton;
+    private TextView counterTextView;
+    private DeleteSalesAdapter saleAdapter;
 
     private DatabaseReference salesDatabaseReference;
+
+    private ArrayList<String> dateOfSale;
+    private ArrayList<String> foodStuffs;
+    private ArrayList<String> prices;
+    private ArrayList<String> saleKeys;
+    private ArrayList<String> checkedSaleKeys;
+    private ArrayList<String> checkFoodItems;
+    private ArrayList<String> dateAndTime;
+    private ArrayList<String> checkedDateAndTime;
+
+    private int counter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +63,22 @@ public class DeleteSalesActivity extends AppCompatActivity {
         salesDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Sales");
         salesDatabaseReference.keepSynced(true);
 
+        dateOfSale = new ArrayList<>();
+        foodStuffs = new ArrayList<>();
+        prices = new ArrayList<>();
+        saleKeys = new ArrayList<>();
+        checkedSaleKeys = new ArrayList<>();
+        checkFoodItems = new ArrayList<>();
+        dateAndTime = new ArrayList<>();
+        checkedDateAndTime = new ArrayList<>();
+
         startDateEditText = (EditText) findViewById(R.id.first_date_picker);
         endDateEditText = (EditText) findViewById(R.id.second_date_picker);
-        periodic_sales_text_view = (TextView) findViewById(R.id.periodic_sales_amount);
         viewDataButton = (Button) findViewById(R.id.preview_records);
+        imageButton = (ImageButton) findViewById(R.id.delete_sale_button);
+        counterTextView = (TextView) findViewById(R.id.number_of_items);
+        listView = (ListView) findViewById(R.id.delete_sales_list_view);
+        listView.setChoiceMode(listView.CHOICE_MODE_MULTIPLE_MODAL);
 
         startDateEditText.setFocusable(false);
         startDateEditText.setClickable(true);
@@ -56,14 +88,13 @@ public class DeleteSalesActivity extends AppCompatActivity {
         endDateEditText.setClickable(true);
         startDateEditText.setLongClickable(false);
 
-
         startDateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar c = Calendar.getInstance();
-                int mYear = c.get(Calendar.YEAR); // current year
-                int mMonth = c.get(Calendar.MONTH); // current month
-                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+                int mYear = c.get(Calendar.YEAR);
+                int mMonth = c.get(Calendar.MONTH);
+                int mDay = c.get(Calendar.DAY_OF_MONTH);
 
                 datePickerDialog = new DatePickerDialog(DeleteSalesActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -80,9 +111,9 @@ public class DeleteSalesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final Calendar c = Calendar.getInstance();
-                int mYear = c.get(Calendar.YEAR); // current year
-                int mMonth = c.get(Calendar.MONTH); // current month
-                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+                int mYear = c.get(Calendar.YEAR);
+                int mMonth = c.get(Calendar.MONTH);
+                int mDay = c.get(Calendar.DAY_OF_MONTH);
 
                 datePickerDialog = new DatePickerDialog(DeleteSalesActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -101,7 +132,7 @@ public class DeleteSalesActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(startDateEditText.getText().toString())) {
                     if (!TextUtils.isEmpty(startDateEditText.getText().toString())) {
-                        displaySalesOnAlertDialog();
+                        displaySalesOnListView();
 
                     } else {
                         Toast.makeText(DeleteSalesActivity.this, "Provide an end date", Toast.LENGTH_SHORT).show();
@@ -112,44 +143,80 @@ public class DeleteSalesActivity extends AppCompatActivity {
                 }
             }
         });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CheckBox checkBox = (CheckBox)listView.getChildAt(position).findViewById(R.id.checkbox);
+                if (!checkBox.isChecked()) {
+                    checkBox.setChecked(true);
+                    checkFoodItems.add(foodStuffs.get(position));
+                    checkedDateAndTime.add(dateAndTime.get(position));
+                    counter++;
+
+                } else {
+                    checkBox.setChecked(false);
+                    checkFoodItems.remove(foodStuffs.get(position));
+                    checkedDateAndTime.remove(dateAndTime.get(position));
+                    counter--;
+                }
+
+                if (counter > 0) {
+                    if (counter > 1) {
+                        counterTextView.setText(counter + " items selected");
+                    } else if (counter == 1) {
+                        counterTextView.setText("1 item selected");
+                    }
+                } else {
+                    counterTextView.setText("");
+                }
+            }
+        });
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkFoodItems.size() > 0) {
+                    for (String date_time: checkedDateAndTime) {
+                        deleteSale(date_time);
+                    }
+                    counterTextView.setText("");
+                    displaySalesOnListView();
+
+                } else {
+                    Toast.makeText(DeleteSalesActivity.this, "No sale selected!", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
     }
 
-    private void displaySalesOnAlertDialog() {
+    private void displaySalesOnListView() {
         String startDate = getStartDate();
         String endDate = getEndDate();
-
-        final ArrayList<String> dateOfSale = new ArrayList<>();
-        final ArrayList<String> foodStuffs = new ArrayList<>();
-        final ArrayList<String> prices = new ArrayList<>();
 
         salesDatabaseReference.orderByChild("dateOfSale").startAt(startDate).endAt(endDate).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    Iterator<DataSnapshot> dataSnapshotIterator = dataSnapshot.getChildren().iterator();
-                    while (dataSnapshotIterator.hasNext()) {
-
-                        dateOfSale.add(dataSnapshotIterator.next().child("saleDateAndTime").getValue(String.class));
+                    for (DataSnapshot data: dataSnapshot.getChildren()) {
+                        saleKeys.add(data.getKey());
+                        dateOfSale.add(data.child("saleDateAndTime").getValue(String.class));
+                        foodStuffs.add(data.child("foodItem").getValue(String.class));
+                        prices.add(data.child("price").getValue(String.class));
+                        dateAndTime.add(data.child("foodItem_date_time").getValue(String.class));
                     }
 
-                    Iterator<DataSnapshot> foodStuffsIterator = dataSnapshot.getChildren().iterator();
-                    while (foodStuffsIterator.hasNext()) {
-                        foodStuffs.add(foodStuffsIterator.next().child("foodItem").getValue(String.class));
-                    }
-
-                    Iterator<DataSnapshot> PricesIterator = dataSnapshot.getChildren().iterator();
-                    while (PricesIterator.hasNext()) {
-                        prices.add(PricesIterator.next().child("price").getValue(String.class));
-                    }
-
-                    String[] sales = new String[prices.size()];
+                    ArrayList<DeleteSale> sales = new ArrayList<DeleteSale>();
 
                     for (int i = 0, n = prices.size(); i < n; i++) {
-                        sales[i] = dateOfSale.get(i) + "\t" + foodStuffs.get(i) + "\t" + prices.get(i);
+                        sales.add(new DeleteSale(dateOfSale.get(i), foodStuffs.get(i), "GHS " + Double.parseDouble(prices.get(i))));
                     }
 
-                    if (sales.length > 0) {
-                        createDeleteSalesDialog(sales);
+                    if (sales.size() > 0) {
+                        DeleteSalesAdapter saleAdapter = new DeleteSalesAdapter(DeleteSalesActivity.this, sales);
+                        listView.setAdapter(saleAdapter);
 
                     } else {
                         Toast.makeText(DeleteSalesActivity.this, "No sale to display", Toast.LENGTH_SHORT).show();
@@ -165,77 +232,27 @@ public class DeleteSalesActivity extends AppCompatActivity {
         });
     }
 
-    private void createDeleteSalesDialog(final String[] sales) {
-        final boolean[] checkedItems = new boolean[sales.length];
-        final ArrayList<Integer> selectedItems = new ArrayList<>();
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Available food items");
-        builder.setCancelable(false);
-        builder.setMultiChoiceItems(sales, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+    private void deleteSale(String food) {
+        salesDatabaseReference.orderByChild("foodItem_date_time").equalTo(food).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                if (isChecked) {
-                    if (!selectedItems.contains(which)) {
-                        selectedItems.add(which);
-                    } else {
-                        selectedItems.remove(which);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String key = "";
+                    Iterator<DataSnapshot> dataSnapshotIterator = dataSnapshot.getChildren().iterator();
+                    if (dataSnapshotIterator.hasNext()) {
+                        key = dataSnapshotIterator.next().getKey();
+                        salesDatabaseReference.child(key).removeValue();
                     }
                 }
-            }
-        });
 
-        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                DeleteSalesAdapter deleteSalesAdapter = (DeleteSalesAdapter)listView.getAdapter();
+                deleteSalesAdapter.clear();
+            }
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // delete items here
-                for (Integer i: selectedItems) {
-                    String saleToDelete = sales[i];
-                    String[] splitSalesToDelete = saleToDelete.split("\t");
+            public void onCancelled(DatabaseError databaseError) {
 
-                    salesDatabaseReference.orderByChild("foodItem").equalTo(splitSalesToDelete[1]).startAt(splitSalesToDelete[0]).endAt(splitSalesToDelete[0]).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                String key = "";
-                                Iterator<DataSnapshot> dataSnapshotIterator = dataSnapshot.getChildren().iterator();
-                                if (dataSnapshotIterator.hasNext()) {
-                                    key = dataSnapshotIterator.next().getKey();
-                                }
-
-                                if (!TextUtils.isEmpty(key))
-                                    salesDatabaseReference.child(key).removeValue();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
-                }
             }
         });
-
-        builder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                for (int i = 0; i < checkedItems.length; i++) {
-                    checkedItems[i] = false;
-                    selectedItems.clear();
-                }
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
     private String getStartDate() {
@@ -271,4 +288,5 @@ public class DeleteSalesActivity extends AppCompatActivity {
         return formattedDate;
 
     }
+
 }

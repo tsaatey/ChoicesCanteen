@@ -4,14 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:fillViewport="true"
+    android:orientation="vertical"
     tools:context="com.artlib.choicescanteen.DeleteSalesActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar2"
@@ -22,70 +21,97 @@
             android:theme="?attr/actionBarTheme"
             app:title="Delete Sales" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp">
+            android:layout_toLeftOf="@+id/delete_sale_button"
+            android:id="@+id/number_of_items"
+            android:layout_marginTop="20dp"
+            android:text=""
+            android:layout_marginRight="5dp"/>
 
-            <TextView
-                android:id="@+id/from_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="14dp"
-                android:text="From:"
-                android:textAlignment="center" />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="16dp"
+            android:background="#00FFFFFF"
+            android:src="@mipmap/ic_delete_black_24dp"
+            android:id="@+id/delete_sale_button"/>
 
-            <EditText
-                android:id="@+id/first_date_picker"
-                android:layout_width="90dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_toEndOf="@+id/from_textview"
-                android:layout_toRightOf="@+id/from_textview"
-                android:clickable="true" />
-
-            <TextView
-                android:id="@+id/to_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_toEndOf="@+id/first_date_picker"
-                android:layout_toRightOf="@+id/first_date_picker"
-                android:paddingTop="14dp"
-                android:text="To:"
-                android:textAlignment="center" />
-
-            <EditText
-                android:id="@+id/second_date_picker"
-                android:layout_width="90dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_toEndOf="@+id/to_textview"
-                android:layout_toRightOf="@+id/to_textview"
-                android:clickable="true" />
-
-            <Button
-                android:id="@+id/preview_records"
-                android:layout_width="85dp"
-                android:layout_height="40dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="15dp"
-                android:layout_toEndOf="@+id/second_date_picker"
-                android:layout_toRightOf="@+id/second_date_picker"
-                android:text="Preview"
-                android:textAllCaps="false" />
-
-        </RelativeLayout>
-
-        <ListView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/delete_sales_list_view"
-            android:choiceMode="multipleChoice" />
+            android:orientation="vertical"
+            android:layout_below="@+id/toolbar2">
 
-    </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp">
 
+                <TextView
+                    android:id="@+id/from_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="14dp"
+                    android:text="From:"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:id="@+id/first_date_picker"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toEndOf="@+id/from_textview"
+                    android:layout_toRightOf="@+id/from_textview"
+                    android:clickable="true" />
+
+                <TextView
+                    android:id="@+id/to_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toEndOf="@+id/first_date_picker"
+                    android:layout_toRightOf="@+id/first_date_picker"
+                    android:paddingTop="14dp"
+                    android:text="To:"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:id="@+id/second_date_picker"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toEndOf="@+id/to_textview"
+                    android:layout_toRightOf="@+id/to_textview"
+                    android:clickable="true" />
+
+                <Button
+                    android:id="@+id/preview_records"
+                    android:layout_width="85dp"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toEndOf="@+id/second_date_picker"
+                    android:layout_toRightOf="@+id/second_date_picker"
+                    android:text="View"
+                    android:textAllCaps="false" />
+
+            </RelativeLayout>
+
+            <ListView
+                android:id="@+id/delete_sales_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:choiceMode="multipleChoice" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
 
 </ScrollView>
 

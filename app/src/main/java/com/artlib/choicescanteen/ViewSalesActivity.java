@@ -9,11 +9,13 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,11 +29,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 public class ViewSalesActivity extends AppCompatActivity {
 
-    private GridLayout gridLayout;
+    private ListView listView;
     private Button viewDataButton;
     private TextView periodic_sales_text_view;
     private EditText startDateEditText;
@@ -49,7 +52,7 @@ public class ViewSalesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_sales);
 
-        gridLayout = (GridLayout) findViewById(R.id.display_sales_grid);
+        listView = (ListView) findViewById(R.id.display_sales_grid);
 
         salesDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Sales");
         salesDatabaseReference.keepSynced(true);
@@ -74,9 +77,9 @@ public class ViewSalesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final Calendar c = Calendar.getInstance();
-                int mYear = c.get(Calendar.YEAR); // current year
-                int mMonth = c.get(Calendar.MONTH); // current month
-                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+                int mYear = c.get(Calendar.YEAR);
+                int mMonth = c.get(Calendar.MONTH);
+                int mDay = c.get(Calendar.DAY_OF_MONTH);
 
                 datePickerDialog = new DatePickerDialog(ViewSalesActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -93,9 +96,9 @@ public class ViewSalesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final Calendar c = Calendar.getInstance();
-                int mYear = c.get(Calendar.YEAR); // current year
-                int mMonth = c.get(Calendar.MONTH); // current month
-                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+                int mYear = c.get(Calendar.YEAR);
+                int mMonth = c.get(Calendar.MONTH);
+                int mDay = c.get(Calendar.DAY_OF_MONTH);
 
                 datePickerDialog = new DatePickerDialog(ViewSalesActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -115,8 +118,7 @@ public class ViewSalesActivity extends AppCompatActivity {
                 if (!TextUtils.isEmpty(startDateEditText.getText().toString())) {
                     if (!TextUtils.isEmpty(startDateEditText.getText().toString())) {
                         linearLayout.setVisibility(View.VISIBLE);
-                        gridLayout.removeAllViews();
-                        displaySalesInGridLayout();
+                        displaySalesInListView();
 
                     } else {
                         Toast.makeText(ViewSalesActivity.this, "Provide an end date", Toast.LENGTH_SHORT).show();
@@ -129,7 +131,7 @@ public class ViewSalesActivity extends AppCompatActivity {
         });
     }
 
-    private void displaySalesInGridLayout() {
+    private void displaySalesInListView() {
         String startDate = getStartDate();
         String endDate = getEndDate();
 
@@ -141,73 +143,20 @@ public class ViewSalesActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    Iterator<DataSnapshot> dataSnapshotIterator = dataSnapshot.getChildren().iterator();
-                    while (dataSnapshotIterator.hasNext()) {
-
-                        dateOfSale.add(dataSnapshotIterator.next().child("saleDateAndTime").getValue(String.class));
+                    for (DataSnapshot data: dataSnapshot.getChildren()) {
+                        dateOfSale.add(data.child("saleDateAndTime").getValue(String.class));
+                        foodStuffs.add(data.child("foodItem").getValue(String.class));
+                        prices.add(data.child("price").getValue(String.class));
+                        totalSalesForAllFoodItems += Double.parseDouble(data.child("price").getValue(String.class));
                     }
 
-                    Iterator<DataSnapshot> foodStuffsIterator = dataSnapshot.getChildren().iterator();
-                    while (foodStuffsIterator.hasNext()) {
-                        foodStuffs.add(foodStuffsIterator.next().child("foodItem").getValue(String.class));
+                    ArrayList<Sale> sales = new ArrayList<Sale>();
+                    for (int i = 0; i < foodStuffs.size(); i++) {
+                        sales.add(new Sale(dateOfSale.get(i), foodStuffs.get(i), "GHS "+ Double.parseDouble(prices.get(i))));
                     }
 
-                    Iterator<DataSnapshot> PricesIterator = dataSnapshot.getChildren().iterator();
-                    while (PricesIterator.hasNext()) {
-                        prices.add(PricesIterator.next().child("price").getValue(String.class));
-                    }
-
-                    Iterator<DataSnapshot> totalSalesIterator = dataSnapshot.getChildren().iterator();
-                    while (totalSalesIterator.hasNext()) {
-                        totalSalesForAllFoodItems += Double.parseDouble(totalSalesIterator.next().child("price").getValue(String.class));
-                    }
-
-                    int count = 0;
-                    for (String food : foodStuffs) {
-
-                        for (int i = 1; i <= 3; i++) {
-
-                            if (i == 1) {
-                                TextView sold_food_text_view = new TextView(ViewSalesActivity.this);
-                                sold_food_text_view.setId(counter);
-                                sold_food_text_view.setText(dateOfSale.get(count));
-                                sold_food_text_view.setWidth(140);
-                                gridLayout.addView(sold_food_text_view);
-
-                                GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-                                param.height = 80;
-                                param.width = 200;
-                                param.leftMargin = 80;
-                                sold_food_text_view.setLayoutParams(param);
-
-                            } else if (i == 2) {
-                                TextView sold_food_text_view = new TextView(ViewSalesActivity.this);
-                                sold_food_text_view.setId(counter);
-                                sold_food_text_view.setText(food);
-                                sold_food_text_view.setWidth(140);
-                                gridLayout.addView(sold_food_text_view);
-
-                                GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-                                param.height = 80;
-                                param.width = 300;
-                                param.leftMargin = 80;
-                                sold_food_text_view.setLayoutParams(param);
-
-                            } else if (i == 3) {
-                                TextView sold_food_text_view = new TextView(ViewSalesActivity.this);
-                                sold_food_text_view.setId(counter);
-                                sold_food_text_view.setText("GHS " + Double.parseDouble(prices.get(count)) + "0");
-                                gridLayout.addView(sold_food_text_view);
-
-                                GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-                                param.height = 80;
-                                param.leftMargin = 25;
-                                sold_food_text_view.setLayoutParams(param);
-                            }
-                        }
-                        count++;
-                        counter++;
-                    }
+                    SaleAdapter arrayAdapter = new SaleAdapter(ViewSalesActivity.this, android.R.layout.simple_list_item_1, sales);
+                    listView.setAdapter(arrayAdapter);
 
                     periodic_sales_text_view.setText("GHS " + totalSalesForAllFoodItems + "0");
                     totalSalesForAllFoodItems = 0;
