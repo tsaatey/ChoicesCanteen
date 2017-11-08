@@ -224,7 +224,7 @@ public class DashboardActivity extends AppCompatActivity {
                         break;
 
                     case R.id.delete_user:
-                        // // TODO: 18/10/2017  
+                        startActivity(new Intent(DashboardActivity.this, DeleteUserActivity.class));
                         break;
 
                     case R.id.add_food:

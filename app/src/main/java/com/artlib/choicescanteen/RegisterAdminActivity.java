@@ -88,6 +88,9 @@ public class RegisterAdminActivity extends AppCompatActivity {
                             Map<String, String> adminData = new HashMap<String, String>();
                             adminData.put("name", name);
                             databaseReference.setValue(adminData);
+                            userLocalDataStore.storeAdminId(id);
+                            userLocalDataStore.storeAdminEmail(email);
+                            userLocalDataStore.storeAdminPassword(password);
 
                             progressDialog.dismiss();
 

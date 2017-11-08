@@ -164,6 +164,9 @@ public class SetupActivity extends AppCompatActivity {
     private void addUserToDatabase(final String name, String user_mail, String password1, String password2) {
 
         if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(user_mail) && !TextUtils.isEmpty(password1) && !TextUtils.isEmpty(password2)) {
+            progressDialog.setMessage("Creating user account...please wait");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
 
             if (password1.equals(password2)) {
                 final String userId = generateId();
@@ -172,19 +175,27 @@ public class SetupActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            DatabaseReference storeUser = addUserDatabaseReference.child(userId);
-                            Map<String, String> userData = new HashMap<String, String>();
-                            userData.put("name", name);
-                            storeUser.setValue(userData);
+//                            DatabaseReference storeUser = addUserDatabaseReference.child(userId);
+//                            Map<String, String> userData = new HashMap<String, String>();
+//                            userData.put("name", name);
+//                            storeUser.setValue(userData);
+                            if (progressDialog != null && progressDialog.isShowing())
+                                progressDialog.dismiss();
+
+                            Toast.makeText(SetupActivity.this, "User account created!", Toast.LENGTH_SHORT).show();
 
                         } else {
-                            progressDialog.dismiss();
+                            if (progressDialog != null && progressDialog.isShowing())
+                                progressDialog.dismiss();
+
                             Toast.makeText(SetupActivity.this, "Error in adding user. Try again!", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
             } else {
-                progressDialog.dismiss();
+                if (progressDialog != null && progressDialog.isShowing())
+                    progressDialog.dismiss();
+
                 Toast.makeText(SetupActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
             }
         } else {

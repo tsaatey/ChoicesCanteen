@@ -78,6 +78,9 @@ public class AddUserActivity extends AppCompatActivity {
     private void addUserToDatabase(final String name, String user_mail, String password1, String password2) {
 
         if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(user_mail) && !TextUtils.isEmpty(password1) && !TextUtils.isEmpty(password2)) {
+            progressDialog.setMessage("Creating user account...please wait");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
 
             if (password1.equals(password2)) {
                 final String userId = generateId();
@@ -91,15 +94,22 @@ public class AddUserActivity extends AppCompatActivity {
                             userData.put("name", name);
                             storeUser.setValue(userData);
 
+                            if (progressDialog != null && progressDialog.isShowing())
+                                progressDialog.dismiss();
+
                         } else {
-                            progressDialog.dismiss();
+                            if (progressDialog != null && progressDialog.isShowing())
+                                progressDialog.dismiss();
+
                             Toast.makeText(AddUserActivity.this, "Error in adding user. Try again!", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
 
             } else {
-                progressDialog.dismiss();
+                if (progressDialog != null && progressDialog.isShowing())
+                    progressDialog.dismiss();
+
                 Toast.makeText(AddUserActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
             }
         } else {

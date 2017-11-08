@@ -53,4 +53,37 @@ public class UserLocalDataStore {
         return user;
     }
 
+    public void storeAdminId(String id) {
+        SharedPreferences.Editor editor = userLocalDataStore.edit();
+        editor.putString("admin_id", id);
+        editor.commit();
+    }
+
+    public void storeAdminEmail(String email) {
+        SharedPreferences.Editor editor = userLocalDataStore.edit();
+        editor.putString("admin_email", email);
+        editor.commit();
+    }
+
+    public void storeAdminPassword(String password) {
+        SharedPreferences.Editor editor = userLocalDataStore.edit();
+        editor.putString("admin_password", password);
+        editor.commit();
+    }
+
+    public String getAdminEmail() {
+        String email = userLocalDataStore.getString("admin_email", "");
+        return email;
+    }
+
+    public String getAdminPassword() {
+        String password = userLocalDataStore.getString("admin_password", "");
+        return password;
+    }
+
+    public String getAdminId() {
+        String id = userLocalDataStore.getString("admin_id", "");
+        return id;
+    }
+
 }

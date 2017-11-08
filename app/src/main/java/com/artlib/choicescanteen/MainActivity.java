@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void login() {
         final String usernameText = username.getText().toString();
-        String passwordText = password.getText().toString();
+        final String passwordText = password.getText().toString();
         if (!TextUtils.isEmpty(usernameText) && !TextUtils.isEmpty(passwordText)) {
             progressDialog.setMessage("You are being logged in, please wait...");
             progressDialog.setCancelable(false);
@@ -126,28 +126,22 @@ public class MainActivity extends AppCompatActivity {
                                 if (dataSnapshot.hasChild(id)){
                                     userLocalDataStore.isAdminLoggedIn(true);
                                     userLocalDataStore.storeUser("Admin");
+                                    userLocalDataStore.storeAdminId(id);
+                                    userLocalDataStore.storeAdminEmail(usernameText);
+                                    userLocalDataStore.storeAdminPassword(passwordText);
+                                    progressDialog.dismiss();
+
+                                    Intent dashboardIntent = new Intent(MainActivity.this, DashboardActivity.class);
+                                    dashboardIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(dashboardIntent);
+
+                                } else {
+                                    userLocalDataStore.isAdminLoggedIn(false);
                                     progressDialog.dismiss();
                                     Intent dashboardIntent = new Intent(MainActivity.this, DashboardActivity.class);
                                     dashboardIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(dashboardIntent);
-                                } else {
-                                    userDatabaseReference.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            if (dataSnapshot.hasChild(id)) {
-                                                userLocalDataStore.isAdminLoggedIn(false);
-                                                progressDialog.dismiss();
-                                                Intent dashboardIntent = new Intent(MainActivity.this, DashboardActivity.class);
-                                                dashboardIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                startActivity(dashboardIntent);
-                                            }
-                                        }
 
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-                                            progressDialog.dismiss();
-                                        }
-                                    });
                                 }
                             }
 
